@@ -1,0 +1,589 @@
+/* --- BRAND STYLE CONSTANTS --- */
+:root {
+    --midnight-fur: #0D0D0D;
+    --golden-gaze: #FFDE6A;
+    --ash-nose: #6C757D;
+    --dental-white: #FFFBF5;
+    --cat-tongue-pink: #FF6C60;
+    
+    /* Font Fallback Stack prioritizing geometric structural look resembling Futura */
+    --brand-font: 'Futura', 'Century Gothic', 'AppleGothic', sans-serif;
+}
+
+/* --- SYSTEM RESET & BASE STYLES --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--dental-white);
+    color: var(--midnight-fur);
+    font-family: var(--brand-font);
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* --- MAIN HEADER NAVIGATION (SIMPLIFIED FOR BRANDING ONLY) --- */
+.main-header {
+    background-color: var(--midnight-fur);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 4px solid var(--golden-gaze);
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 20px;
+}
+
+/* --- LOGO AREA ALIGNMENT --- */
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    width: 40px; 
+    height: 40px;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.logo-area:hover .logo-icon {
+    transform: scale(1.1) rotate(-5deg);
+}
+
+.logo-title {
+    color: var(--golden-gaze);
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+/* --- NEW: VERTICAL FLOATING WINDOW NAVIGATION STYLES --- */
+.floating-nav {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2000;
+    background-color: rgba(13, 13, 13, 0.95); /* Midnight Fur w/ smooth translucency */
+    border: 3px solid var(--midnight-fur);
+    outline: 2px solid var(--golden-gaze);
+    border-radius: 40px;
+    padding: 20px 10px;
+    box-shadow: -4px 4px 15px rgba(0, 0, 0, 0.3);
+    
+    /* 👈 移除掉原本的 animation，換回乾淨、流暢的非線性平滑過渡 */
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.floating-nav:hover {
+    outline-color: var(--cat-tongue-pink);
+    box-shadow: -6px 6px 20px rgba(255, 108, 96, 0.2);
+}
+
+.floating-nav ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.floating-nav li {
+    position: relative;
+}
+
+.floating-nav li a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--dental-white);
+    border-radius: 30px;
+    padding: 8px;
+    transition: background-color 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.floating-nav li a:hover {
+    background-color: rgba(255, 222, 106, 0.15);
+}
+
+.floating-nav .nav-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    z-index: 2;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.floating-nav .nav-icon::before {
+    content: "";
+    width: 12px;  /* 圓點的直徑大小 */
+    height: 12px;
+    background-color: var(--dental-white); /* 使用專屬象牙白 #FFFBF5 */
+    border-radius: 50%; /* 變成完美正圓 */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* 當個別選項被 hover 時，原有的圖標容器縮放動畫 */
+.floating-nav li a:hover .nav-icon {
+    transform: scale(1.2);
+}
+
+/* 👈 全新加入：當滑鼠懸停時，小圓點會平滑轉變成貓舌粉紅，提示目前選取項 */
+.floating-nav li a:hover .nav-icon::before {
+    background-color: var(--cat-tongue-pink);
+}
+
+.floating-nav li a:hover .nav-icon {
+    transform: scale(1.2);
+}
+
+/* 【核心修改】文字標題：預設狀態（滑鼠離開，控制「收起」時的強力回彈） */
+.floating-nav .nav-text {
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--golden-gaze);
+    margin-left: 0;
+    
+    /* 👈 核心調校：將貝氏曲線後方係數加強至 1.65 
+       這會讓收起時的「反彈力道」大幅增加，創造出極具視覺衝擊力的彈簧縮回感 */
+    transition: 
+        max-width 0.35s cubic-bezier(0.175, 0.885, 0.22, 1.65), 
+        opacity 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+        margin-left 0.35s cubic-bezier(0.175, 0.885, 0.22, 1.65),
+        margin-right 0.35s cubic-bezier(0.175, 0.885, 0.22, 1.65);
+}
+
+/* 當滑鼠 hover 到整個控制台時（控制「展開」時的動畫） */
+.floating-nav:hover .nav-text {
+    max-width: 140px;
+    opacity: 1;
+    margin-left: 10px;
+    margin-right: 12px;
+    
+    /* 展開時保持順暢的大型彈性曲線 */
+    transition: 
+        max-width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), 
+        opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+        margin-left 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+        margin-right 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.floating-nav li a:hover .nav-text {
+    color: var(--cat-tongue-pink);
+}
+
+/* --- HERO SECTION --- */
+.hero-section {
+    background: linear-gradient(135deg, #1a1a1a 0%, var(--midnight-fur) 100%);
+    color: var(--dental-white);
+    padding: 80px 20px;
+    border-bottom: 8px solid var(--cat-tongue-pink);
+}
+
+.hero-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 40px;
+    align-items: center;
+}
+
+.hero-text h1 {
+    font-size: 3.5rem;
+    color: var(--golden-gaze);
+    line-height: 1.1;
+    margin-bottom: 10px;
+}
+
+.hero-text .subtitle {
+    font-size: 1.2rem;
+    color: var(--ash-nose);
+    margin-bottom: 30px;
+}
+
+.brand-story {
+    font-style: italic;
+    border-left: 4px solid var(--golden-gaze);
+    padding-left: 20px;
+    margin-bottom: 35px;
+    font-size: 1.1rem;
+    color: #e0e0e0;
+}
+
+.contact-box p {
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.hero-brand-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hero-brand-card h3 {
+    color: var(--cat-tongue-pink);
+    margin-bottom: 15px;
+}
+
+.color-palette {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.color-swatch {
+    padding: 10px 15px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    border-radius: 6px;
+    letter-spacing: 0.05em;
+}
+
+/* --- PORTFOLIO WORK FEED --- */
+.portfolio-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+}
+
+.project-card {
+    background-color: #ffffff;
+    border: 3px solid var(--midnight-fur);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 6px 6px 0px var(--midnight-fur);
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.project-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px var(--midnight-fur);
+}
+
+.project-tag {
+    display: inline-block;
+    background-color: var(--midnight-fur);
+    color: var(--golden-gaze);
+    padding: 4px 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.project-card h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: var(--midnight-fur);
+}
+
+.project-intro {
+    font-size: 1.1rem;
+    color: var(--ash-nose);
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
+.project-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.detail-block h3 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: var(--midnight-fur);
+    border-bottom: 2px solid var(--midnight-fur);
+    padding-bottom: 4px;
+}
+/* --- POSTER GALLERY GRID STYLES --- */
+.poster-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.poster-gallery-item {
+    background-color: var(--dental-white);
+    border: 3px solid var(--midnight-fur);
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 4px 4px 0px var(--midnight-fur);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+}
+
+/* 懸停時，整張海報卡片往上浮起，陰影變大 */
+.poster-gallery-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 8px 12px 20px rgba(13, 13, 13, 0.15), 8px 8px 0px var(--midnight-fur);
+}
+
+.poster-image-container {
+    width: 100%;
+    /* 設定 2:3 的黃金直式海報比例 */
+    aspect-ratio: 2 / 3; 
+    border: 2px solid var(--midnight-fur);
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #e0e0e0;
+}
+
+.poster-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 確保圖片完美填滿容器且不變形 */
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+/* 懸停時，內部的海報圖片會有細微放大的動態效果 */
+.poster-gallery-item:hover .poster-image-container img {
+    transform: scale(1.03);
+}
+
+.poster-gallery-caption {
+    margin-top: 15px;
+    text-align: left;
+}
+
+.poster-gallery-caption strong {
+    display: block;
+    font-size: 1rem;
+    color: var(--midnight-fur);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    letter-spacing: 0.02em;
+}
+
+.poster-gallery-caption p {
+    font-size: 0.85rem;
+    color: var(--ash-nose);
+    font-weight: bold;
+}
+
+/* 針對行動裝置優化：在小螢幕上縮小卡片間距 */
+@media (max-width: 600px) {
+    .poster-gallery-grid {
+        grid-template-columns: 1fr; /* 手機上一列排一張 */
+        gap: 20px;
+    }
+}
+
+
+/* Campaign Highlights Node Formatting */
+.campaign-highlights {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: var(--dental-white);
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 6px solid var(--midnight-fur);
+}
+
+.highlight-item strong {
+    color: var(--cat-tongue-pink);
+    display: block;
+}
+
+/* Custom Grid Arrays */
+.grid-three {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.feature-box {
+    background-color: var(--dental-white);
+    padding: 25px;
+    border-radius: 8px;
+    border: 2px solid var(--ash-nose);
+}
+
+.feature-box h4 {
+    margin-bottom: 10px;
+    color: var(--midnight-fur);
+}
+
+/* Stats Element Block */
+.stats-banner {
+    display: flex;
+    justify-content: space-around;
+    background-color: var(--midnight-fur);
+    color: var(--dental-white);
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 35px;
+    text-align: center;
+}
+
+.stat-node h3 {
+    font-size: 2.5rem;
+    color: var(--golden-gaze);
+}
+
+.stat-node p {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: var(--dental-white);
+}
+
+.tcr-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 30px;
+}
+
+.tcr-column h3 {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
+.tcr-column p {
+    margin-bottom: 15px;
+}
+
+/* Alternate BG Component Styles */
+.alternate-bg {
+    background-color: var(--golden-gaze);
+    box-shadow: 6px 6px 0px var(--midnight-fur);
+}
+
+.growth-quote {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    font-style: italic;
+    font-weight: bold;
+    color: var(--midnight-fur);
+}
+
+/* --- INTERACTIVE ACTION ASSETS --- */
+.action-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.slogan-badge {
+    font-weight: 700;
+    text-transform: uppercase;
+    background-color: var(--golden-gaze);
+    padding: 6px 14px;
+    border: 2px solid var(--midnight-fur);
+    border-radius: 4px;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 12px 28px;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    border-radius: 8px;
+    border: 3px solid var(--midnight-fur);
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.cta-button:hover {
+    transform: translateY(-2px);
+}
+
+.pink-btn { background-color: var(--cat-tongue-pink); color: var(--dental-white); }
+.pink-btn:hover { background-color: var(--midnight-fur); color: var(--cat-tongue-pink); }
+
+.dark-btn { background-color: var(--midnight-fur); color: var(--golden-gaze); }
+.dark-btn:hover { background-color: var(--golden-gaze); color: var(--midnight-fur); }
+
+.yellow-btn { background-color: var(--golden-gaze); color: var(--midnight-fur); }
+.yellow-btn:hover { background-color: var(--midnight-fur); color: var(--golden-gaze); }
+
+/* --- RUNTIME FOOTER AREA --- */
+.main-footer {
+    background-color: var(--midnight-fur);
+    color: var(--ash-nose);
+    text-align: center;
+    padding: 30px 20px;
+    font-size: 0.85rem;
+    border-top: 4px solid var(--ash-nose);
+}
+
+/* --- RESPONSIVE MEDIA VIEWPORTS --- */
+@media (max-width: 900px) {
+    .hero-container, .project-details, .tcr-grid {
+        grid-template-columns: 1fr;
+    }
+    .hero-text h1 {
+        font-size: 2.8rem;
+    }
+    .stats-banner {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    /* 手機板適應性：將浮窗移動到螢幕最底端橫向排列，避免遮擋內容 */
+    .floating-nav {
+        left: 50%;
+        right: auto;
+        top: auto;
+        bottom: 20px;
+        transform: translateX(-50%);
+        padding: 10px 20px;
+        border-radius: 30px;
+    }
+    .floating-nav ul {
+        flex-direction: row;
+        gap: 12px;
+    }
+    .floating-nav:hover .nav-text {
+        max-width: 0; /* 手機裝置空間有限，Hover 時不展開文字以維持極簡 */
+        opacity: 0;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
