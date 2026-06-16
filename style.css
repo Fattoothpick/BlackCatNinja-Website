@@ -1208,10 +1208,10 @@ h1, h2, h3, h4 {
 }
 
 /* ==========================================================================
-   RESPONSIVE VIEWPORT ADAPTATIONS (MOBILE OPTIMIZATION) - BUGS FIXED VERSION
+   RESPONSIVE VIEWPORT ADAPTATIONS (MOBILE OPTIMIZATION) - BUGS FIXED
    ========================================================================== */
    @media (max-width: 900px) {
-    /* 基礎格狀容器降維 */
+    /* 基礎卡片欄位轉單欄 */
     .hero-container, .project-details, .tcr-grid {
         grid-template-columns: 1fr;
     }
@@ -1225,81 +1225,106 @@ h1, h2, h3, h4 {
         gap: 20px;
     }
     
-    /* 手機版完全隱藏右側浮窗導覽列 */
+    /* 手機版適應性：隱藏右側浮窗導覽列 */
     .floating-nav {
         display: none !important;
     }
 
-    /* --- 1. Fix: Instagram 網格調整 --- */
+    /* Instagram 貼文轉為 2 欄排列 */
     .tcr-instagram-grid-fixed {
         grid-template-columns: repeat(2, 1fr);
         gap: 12px;
     }
-    
-    /* --- 2. Fix: 直式書籤高度限制優化（解決過長 Bug） --- */
+
+    /* 📱 修復 Bug 1：讓三個直板 Banner 在手機上維持「三個一列」橫向排列，且縮小佔用空間 */
     .bookmarks-flex-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
+        flex-direction: row;     
+        justify-content: center;
+        align-items: flex-start; /* 👈 核心修正：由 stretch 改為 flex-start！不再強迫三張卡片吃同一個死板高度 */
+        gap: 10px;               
+        width: 100%;
     }
     
     .bookmark-800-item {
-        width: 100%;
-        /* 👈 將寬度上限縮緊到精緻的 240px，讓高瘦比例的書籤縮小，不會吞噬手機整個畫面 */
-        max-width: 240px; 
-        margin: 0 auto;
+        flex: 1;
+        max-width: 32%;          
+        box-shadow: 2px 2px 0px var(--midnight-fur); 
+        border-radius: 8px;
+        border: 3px solid var(--midnight-fur);
+        background-color: transparent; /* 預防底色外露 */
+        height: auto;            /* 👈 核心修正：卡片高度完全由圖片原生比例「自動撐開」 */
+        overflow: hidden;
     }
 
     .bookmark-800-item img {
         width: 100%;
-        height: auto;
-        /* 👈 嚴格鎖定手機版高度上限為 450px，確保圖片細節 100% 呈現且絕對不拉長變形 */
-        max-height: 450px; 
-        object-fit: cover;
+        height: auto;            /* 👈 核心修正：改回 auto！不限制高度，保證圖片 100% 完整顯現、絕不裁切 */
+        max-height: none;        /* 解除桌面版的最高高度鎖定 */
+        object-fit: normal;      /* 👈 核心修正：回歸最純粹的原生渲染 */
+        display: block;
     }
 
-    /* --- 3. Fix: iOS Showcase 專區自適應優化（解決裁切 Bug） --- */
-    .ios-showcase-container {
-        grid-template-columns: 1fr; /* 轉為單欄垂直堆疊 */
+    /* Banners 在行動裝置上的間距微調 */
+    .tcr-marketing-assets-showcase {
+        gap: 20px;
     }
-    
+    .banner-800-item {
+        box-shadow: 3px 3px 0px var(--midnight-fur);
+        border-radius: 8px;
+    }
+
+    /* 📱 修復 Bug 2：iOS Prototype 專區防裁切、完美寬度自適應 */
+    .ios-showcase-container {
+        grid-template-columns: 1fr; /* 轉為單欄垂直上下堆疊 */
+    }
+
     .ios-text-pane {
-        /* 👈 縮減手機版的 Padding，釋放寶貴的橫向螢幕空間給文字 */
-        padding: 30px 20px; 
+        padding: 30px 16px;      /* 👈 縮減手機版過大的 Padding，釋放橫向空間給文字 */
     }
 
     .ios-text-pane h3 {
-        font-size: 1.4rem; /* 👈 稍微縮小手機版標題字型大小，避免單字過長斷行碎裂 */
+        font-size: 1.35rem;      /* 👈 降低手機版大標題字體大小，避免長英文字直接穿透邊框 */
         line-height: 1.3;
+        word-break: break-word;  /* 防止文字硬撐不換行 */
     }
 
-    .ios-description, .ios-feature-list li {
-        font-size: 0.88rem; /* 隨螢幕微調內文字級 */
+    .ios-description {
+        font-size: 0.85rem;
+        line-height: 1.5;
     }
-    
+
+    .ios-feature-list li {
+        font-size: 0.85rem;
+        padding-left: 15px;
+    }
+
+    /* 模擬 Xcode 程式碼面板的手機版防爆調整 */
     .ios-graphic-pane {
         border-left: none;
-        border-top: 3px solid var(--midnight-fur); /* 轉為上下邊框分界 */
-        padding: 20px; /* 縮小程式碼外圍留白 */
+        border-top: 3px solid var(--midnight-fur);
+        padding: 20px 12px;      /* 👈 縮小程式碼容器外圍間距 */
         width: 100%;
         box-sizing: border-box;
+        overflow: hidden;        /* 阻斷任何溢出可能 */
     }
 
     .ios-mockup-window {
         width: 100%;
-        max-width: 100%;
-        overflow: hidden; /* 防止視窗本體溢出 */
+        box-sizing: border-box;
     }
 
     .ios-mockup-window pre {
-        padding: 15px;
-        max-width: 100%;
-        overflow-x: auto; /* 👈 核心修正：允許代碼在視窗內橫向滑動（Swipe），保護佈局不被撐開 */
+        padding: 12px;
+        white-space: pre-wrap;   /* 👈 核心關鍵：強迫 Swift 程式碼在手機螢幕內自動換行，不允許向右硬撐 */
+        word-break: break-all;   /* 強化程式碼斷字，徹底解決右側被裁切的 bug */
     }
 
     .ios-mockup-window code {
-        font-size: 0.75rem;
-        white-space: pre-wrap; /* 👈 核心修正：強制 Swift 代碼遇到邊界自動換行，徹底消滅右側被裁切的問題 */
-        word-break: break-all; /* 確保超長字串能在字元間斷行 */
+        font-size: 0.72rem;      /* 稍微調小手機版程式碼字級，讓閱讀結構更完整 */
+        line-height: 1.4;
+    }
+    
+    .bowlathon-image-box {
+        margin-bottom: 15px;
     }
 }
